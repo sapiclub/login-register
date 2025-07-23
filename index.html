@@ -1103,7 +1103,10 @@
                 }
 
                 // Validaciones
-                if (existingUsers.includes(email)) {
+                // Cambiar esta línea:
+                //if (existingUsers.includes(email)) {
+                const allRegisteredEmails = [...existingUsers, ...loginUsers.map(user => user.email)];
+                if (allRegisteredEmails.includes(email)) {
                     showAlert("register-error", "Este correo ya está registrado");
                     toggleLoading("register-btn", false);
                     return;
@@ -1146,10 +1149,14 @@ Fecha de registro: ${new Date().toLocaleString("es-ES")}`,
                     await emailjs.send("service_u2h13dq", "template_keo784e", templateParams);
 
                     // Agregar a usuarios existentes
-                    existingUsers.push(email);
+                    // Después de enviar el email exitosamente, cambiar:
+                    //existingUsers.push(email);
+                    if (!existingUsers.includes(email)) {
+                        existingUsers.push(email);
+                    }
 
                     // Mostrar éxito
-                    showAlert("register-success", "¡Registro en espera! puede tardar hasta 24h");
+                    showAlert("register-success", "¡Registro exitoso! Los datos han sido enviados correctamente.");
 
                     // Limpiar formulario
                     document.getElementById("register-form").reset();
